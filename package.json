@@ -1,0 +1,21 @@
+{
+  "name": "NUXT.js",
+  "version": "1.0.0",
+  "description": "My astounding Nuxt.js project",
+  "author": "Антон Голомазов",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "axios": "^0.17.1",
+    "moment": "^2.20.1",
+    "nuxt": "^1.0.0"
+  },
+  "devDependencies": {
+    "cross-env": "^5.0.1"
+  }
+}
