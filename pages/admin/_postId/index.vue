@@ -11,14 +11,13 @@
 
 <script>
   import AdminPostForm from '~/components/Admin/AdminPostForm';
-  import axios from 'axios';
 
   export default {
     layout: 'admin',
-    asyncData(context) {
-      return axios.get(`https://nuxt-blog-9c349.firebaseio.com/posts/${context.params.postId}.json`).then(res => {
+    asyncData({ app, params }) {
+      return app.$axios.$get(`/posts/${params.postId}.json`).then(res => {
         return {
-          loadedPost: res.data
+          loadedPost: res
         }
       });
     },
@@ -34,6 +33,9 @@
     },
     components: {
       AdminPostForm
+    },
+    head: {
+      title: 'Редактирование поста'
     }
   }
 </script>

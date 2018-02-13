@@ -29,7 +29,6 @@
 
 <script>
   import AppControlInput from '~/components/UI/AppControlInput'
-  import AppButton from '~/components/UI/AppButton'
 
   export default {
     name: 'NewPost',
@@ -55,8 +54,7 @@
     methods: {
       onSave () {
         this.$emit('submit', {
-          ...this.editedPost,
-          updatedDate: new Date()
+          ...this.editedPost
         });
       },
       onCancel () {
@@ -64,8 +62,7 @@
       }
     },
     components: {
-      AppControlInput,
-      AppButton
+      AppControlInput
     }
   }
 </script>

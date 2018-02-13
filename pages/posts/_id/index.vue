@@ -3,7 +3,7 @@
     <section class="post">
       <h1 class="post-title">{{ loadedPost.title }}</h1>
       <div class="post-details">
-        <div class="post-detail">Last updated on {{ updatedPost}}</div>
+        <div class="post-detail">Last updated on {{ loadedPost.updatedDate | date}}</div>
         <div class="post-detail">Written by {{ loadedPost.author }}</div>
       </div>
       <img
@@ -21,22 +21,15 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import moment from 'moment';
 
   export default {
-    asyncData(context) {
-      return axios.get(`https://nuxt-blog-9c349.firebaseio.com/posts/${context.params.id}.json`).then(res => {
+    asyncData({ app, params }) {
+      return app.$axios.$get(`/posts/${params.id}.json`).then(res => {
         return {
-          loadedPost: res.data,
-          title: res.data.title
+          loadedPost: res,
+          title: res.title
         }
       })
-    },
-    computed: {
-      updatedPost () {
-        return moment(this.loadedPost.updatedDate).format('DD-MM-YYYY H:m');
-      }
     },
     head() {
       return {

@@ -1,5 +1,4 @@
 import Vuex from 'vuex';
-import axios from 'axios';
 
 const createStore = () => {
   return new Vuex.Store({
@@ -22,40 +21,40 @@ const createStore = () => {
       }
     },
     actions: {
-      nuxtServerInit(vuexContext, context) {
-        return axios.get('https://nuxt-blog-9c349.firebaseio.com/posts.json').then(res => {
+      nuxtServerInit({ commit }, { app }) {
+        return app.$axios.$get(`/posts.json`).then(res => {
           const posts = [];
-          if (res.data) {
-            Object.keys(res.data).map(key => {
+          if (res) {
+            Object.keys(res).map(key => {
               posts.push({
-                ...res.data[key],
+                ...res[key],
                 id: key
               })
             });
-            vuexContext.commit('setPosts', posts);
+            commit('setPosts', posts);
           }
         });
       },
       setPosts({commit}, posts) {
         commit('setPosts', posts)
       },
-      addPost(vuexContext, post) {
+      addPost({commit}, post) {
         const createdPost = {
           ...post,
           updatedDate: new Date()
         };
-        return axios.post('https://nuxt-blog-9c349.firebaseio.com/posts.json', createdPost).then(result => {
-          vuexContext.commit('addPost', {
+        return this.$axios.$post('/posts.json', createdPost).then(res => {
+          commit('addPost', {
             ...createdPost,
-            id: result.data.name
+            id: res.name
           })
         }).catch(err => {
           console.log(err);
         });
       },
-      editPost(vuexContext, editedPost) {
-        return axios.put(`https://nuxt-blog-9c349.firebaseio.com/posts/${editedPost.id}.json`, editedPost).then((res) => {
-          vuexContext.commit('editPost', editedPost);
+      editPost({ commit }, editedPost) {
+        return this.$axios.$put(`/posts/${editedPost.id}.json`, editedPost).then((res) => {
+          commit('editPost', editedPost);
         }).catch(err => console.log(err));
       }
     },

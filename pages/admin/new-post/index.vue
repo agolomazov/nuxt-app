@@ -9,7 +9,6 @@
 </template>
 
 <script>
-  import axios from 'axios'
   import AdminPostForm from '~/components/Admin/AdminPostForm'
 
   export default {
@@ -20,10 +19,14 @@
     },
     methods: {
       onSubmitted (payload) {
+//        console.log(payload);
         this.$store.dispatch('addPost', payload).then(() => {
-          this.$router.push('/admin');
+//          this.$router.push('/admin');
         });
       }
+    },
+    head: {
+      title: 'Создание нового поста'
     }
   }
 </script>

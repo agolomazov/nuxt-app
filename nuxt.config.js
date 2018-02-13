@@ -22,7 +22,7 @@ module.exports = {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#3B8070' },
+  loading: { color: '#3B8070', height: '10px', duration: 3000 },
 
   /*
   ** Global CSS
@@ -34,13 +34,19 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '~/plugins/core-components.js',
+    '~/plugins/date-filter'
   ],
 
   /*
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/axios',
   ],
+  axios: {
+    baseURL: process.env.BASE_URL || 'https://nuxt-blog-9c349.firebaseio.com'
+  },
 
   /*
   ** Build configuration
@@ -52,5 +58,11 @@ module.exports = {
     extend(config, ctx) {
 
     }
+  },
+  env: {
+    baseUrl: process.env.BASE_URL || 'https://nuxt-blog-9c349.firebaseio.com'
+  },
+  router: {
+    middleware: 'log'
   }
 }
