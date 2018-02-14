@@ -14,7 +14,7 @@
 
   export default {
     layout: 'admin',
-    middleware: 'auth',
+    middleware: ['check-auth', 'auth'],
     asyncData({ app, params }) {
       return app.$axios.$get(`/posts/${params.postId}.json`).then(res => {
         return {

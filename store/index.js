@@ -1,4 +1,5 @@
 import Vuex from 'vuex';
+import Cookie from 'js-cookie';
 
 const createStore = () => {
   return new Vuex.Store({
@@ -25,7 +26,7 @@ const createStore = () => {
       },
       clearToken (state) {
         state.token = null;
-      }
+      },
     },
     actions: {
       nuxtServerInit({ commit }, { app }) {
@@ -77,13 +78,50 @@ const createStore = () => {
           returnSecureToken: true
         }).then(res => {
           commit('setToken', res.idToken);
-          dispatch('setLogoutTime', res.expiresIn * 1000);
+          localStorage.setItem('token', res.idToken);
+          localStorage.setItem('tokenExpiration', new Date().getTime() + Number.parseInt(res.expiresIn) * 1000);
+          Cookie.set('jwt', res.idToken);
+          Cookie.set('expirationDate', new Date().getTime() + Number.parseInt(res.expiresIn) * 1000);
         });
       },
-      setLogoutTime({ commit }, duration) {
-        setTimeout(() => {
-          commit('clearToken');
-        }, duration)
+      initAuth ({ commit, dispatch }, req) {
+        let token;
+        let expirationDate;
+        if (req) {
+          if(!req.headers.cookie) {
+            return;
+          }
+          const jwtCookie = req.headers.cookie
+                              .split(';')
+                              .find(c => c.trim().startsWith('jwt='));
+          if (!jwtCookie) {
+            return;
+          }
+          token = jwtCookie.split('=')[1];
+          expirationDate = req.headers.cookie
+          .split(';')
+          .find(c => c.trim().startsWith('expirationDate='))
+            .split('=')[1];
+        } else {
+          token = localStorage.getItem('token');
+          expirationDate = localStorage.getItem('tokenExpiration');
+        }
+
+        if (new Date().getTime() > +expirationDate || !token) {
+          console.log('No token or invalid token');
+          dispatch('logout');
+          return;
+        }
+        commit('setToken', token);
+      },
+      logout ({ commit, isClient }) {
+        commit('clearToken');
+        Cookie.remove('jwt');
+        Cookie.remove('expirationDate');
+        if(isClient) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('tokenExpiration');
+        }
       }
     },
     getters: {

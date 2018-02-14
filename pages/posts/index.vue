@@ -14,6 +14,9 @@
       loadedPosts() {
         return this.$store.getters.loadedPosts;
       }
+    },
+    head: {
+      title: 'Блог'
     }
   }
 
