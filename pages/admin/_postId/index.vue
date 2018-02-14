@@ -14,6 +14,7 @@
 
   export default {
     layout: 'admin',
+    middleware: 'auth',
     asyncData({ app, params }) {
       return app.$axios.$get(`/posts/${params.postId}.json`).then(res => {
         return {

@@ -13,15 +13,15 @@
 
   export default {
     name: 'NewPost',
+    middleware: ['auth'],
     layout: 'admin',
     components: {
       AdminPostForm
     },
     methods: {
       onSubmitted (payload) {
-//        console.log(payload);
         this.$store.dispatch('addPost', payload).then(() => {
-//          this.$router.push('/admin');
+          this.$router.push('/admin');
         });
       }
     },
